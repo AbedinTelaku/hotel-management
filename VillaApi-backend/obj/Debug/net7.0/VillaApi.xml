@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>VillaApi</name>
+    </assembly>
+    <members>
+        <member name="M:VillaApi.Controllers.SupplyAndSellController.Update(System.Int32,System.Boolean,System.Collections.Generic.IEnumerable{VillaApi.DtosParameters.SupplyAndSellItemsParameters})">
+            <summary>
+            This function Add new items in existing bill
+            </summary>
+            <param name="supplyAndSellId">Id of bill</param>
+            <param name="isDebt">False if the bill has been paid othervise true</param>
+            <param name="supplyAndSellItems">Items that are going to be added to bill</param>
+            <returns>True if the items has been saved in the bill, othervise false</returns>
+        </member>
+    </members>
+</doc>

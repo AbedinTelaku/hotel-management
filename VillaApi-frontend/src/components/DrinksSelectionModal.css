@@ -1,0 +1,324 @@
+.drinks-selection-modal {
+  max-width: 800px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.drinks-selection-modal .modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.drinks-selection-modal .modal-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.drinks-selection-modal .drinks-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  min-height: 400px;
+}
+
+.drinks-selection-modal .categories-section h3,
+.drinks-selection-modal .products-section h3,
+.drinks-selection-modal .cart-section h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 18px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.drinks-selection-modal .category-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drinks-selection-modal .category-tab {
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  background-color: white;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.drinks-selection-modal .category-tab:hover:not(:disabled) {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.drinks-selection-modal .category-tab.active {
+  border-color: #007bff;
+  background-color: #007bff;
+  color: white;
+}
+
+.drinks-selection-modal .category-tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drinks-selection-modal .products-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.drinks-selection-modal .product-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.drinks-selection-modal .product-card:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+}
+
+.drinks-selection-modal .product-info h4 {
+  margin: 0 0 4px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.drinks-selection-modal .product-price {
+  margin: 0 0 4px 0;
+  color: #28a745;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.drinks-selection-modal .product-stock {
+  margin: 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.drinks-selection-modal .add-to-cart-btn {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.drinks-selection-modal .add-to-cart-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.drinks-selection-modal .add-to-cart-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drinks-selection-modal .cart-section {
+  border-left: 1px solid #e1e5e9;
+  padding-left: 20px;
+}
+
+.drinks-selection-modal .empty-cart {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin: 20px 0;
+}
+
+.drinks-selection-modal .cart-items {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.drinks-selection-modal .cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+}
+
+.drinks-selection-modal .item-info {
+  flex: 1;
+}
+
+.drinks-selection-modal .item-name {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.drinks-selection-modal .item-price {
+  display: block;
+  color: #666;
+  font-size: 12px;
+}
+
+.drinks-selection-modal .item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drinks-selection-modal .quantity-btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #007bff;
+  background-color: white;
+  color: #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drinks-selection-modal .quantity-btn:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+}
+
+.drinks-selection-modal .quantity-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drinks-selection-modal .quantity {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.drinks-selection-modal .remove-btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #dc3545;
+  background-color: white;
+  color: #dc3545;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drinks-selection-modal .remove-btn:hover:not(:disabled) {
+  background-color: #dc3545;
+  color: white;
+}
+
+.drinks-selection-modal .remove-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drinks-selection-modal .cart-total {
+  text-align: center;
+  padding: 15px;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.drinks-selection-modal .error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 0 20px 20px;
+  border: 1px solid #f5c6cb;
+}
+
+.drinks-selection-modal .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.drinks-selection-modal .cancel-button,
+.drinks-selection-modal .save-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.drinks-selection-modal .cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.drinks-selection-modal .cancel-button:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.drinks-selection-modal .save-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.drinks-selection-modal .save-button:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.drinks-selection-modal .save-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drinks-selection-modal .cancel-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .drinks-selection-modal .drinks-content {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .drinks-selection-modal .cart-section {
+    border-left: none;
+    border-top: 1px solid #e1e5e9;
+    padding-left: 0;
+    padding-top: 15px;
+  }
+}

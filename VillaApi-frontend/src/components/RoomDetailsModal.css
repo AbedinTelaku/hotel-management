@@ -1,0 +1,228 @@
+.room-details-modal {
+  max-width: 700px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.room-details-modal .modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.room-details-modal .modal-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.room-details-modal .room-details-content {
+  padding: 20px;
+}
+
+.room-details-modal .details-section {
+  margin-bottom: 30px;
+}
+
+.room-details-modal .details-section h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 18px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.room-details-modal .details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.room-details-modal .detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.room-details-modal .detail-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.room-details-modal .detail-value {
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: right;
+}
+
+.room-details-modal .financial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.room-details-modal .financial-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.room-details-modal .financial-item.total {
+  background-color: #e9ecef;
+  border-left-color: #007bff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.room-details-modal .financial-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.room-details-modal .financial-value {
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: right;
+}
+
+.room-details-modal .financial-value.debt {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.room-details-modal .financial-value.paid {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.room-details-modal .financial-value.gratis {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.room-details-modal .financial-value.total {
+  color: #007bff;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.room-details-modal .loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.room-details-modal .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.room-details-modal .loading-container p {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+.room-details-modal .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.room-details-modal .error-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.room-details-modal .error-container p {
+  color: #dc3545;
+  font-size: 16px;
+  margin: 0 0 20px 0;
+}
+
+.room-details-modal .retry-button {
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.room-details-modal .retry-button:hover {
+  background-color: #0056b3;
+}
+
+.room-details-modal .modal-actions {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.room-details-modal .close-details-button {
+  padding: 12px 24px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.room-details-modal .close-details-button:hover {
+  background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .room-details-modal .details-grid,
+  .room-details-modal .financial-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .room-details-modal .detail-item,
+  .room-details-modal .financial-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .room-details-modal .detail-value,
+  .room-details-modal .financial-value {
+    text-align: left;
+  }
+}

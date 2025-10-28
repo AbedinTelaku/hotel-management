@@ -1,0 +1,587 @@
+.drinks-sale {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.drinks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.drinks-header h2 {
+  color: #333;
+  margin: 0;
+  font-size: 28px;
+}
+
+.cart-summary {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.cart-count {
+  background: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cart-total {
+  /* Use a darker green for better contrast on both desktop and mobile */
+  background: #0f9d63; /* slightly darker than #10b981 */
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(15, 157, 99, 0.18);
+}
+
+/* Stronger, page-scoped selector to override generic .cart-total rules from other files */
+.drinks-sale .cart-summary .cart-total {
+  background: #0f9d63 !important;
+  color: #ffffff !important;
+  padding: 8px 16px !important;
+  border-radius: 20px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(15, 157, 99, 0.18) !important;
+  border: none !important;
+}
+
+.error-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.drinks-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  height: calc(100vh - 200px);
+}
+
+.products-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.products-header {
+  margin-bottom: 20px;
+}
+
+.products-header h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.products-filters {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.category-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 150px;
+}
+
+.category-filter label {
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
+.category-select {
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.product-card {
+  background: #f8f9fa;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 15px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-card:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.product-info {
+  margin-bottom: 10px;
+}
+
+.product-name {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.product-category {
+  margin: 0 0 5px 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Hide the small code/category line on product cards for the DrinksSale page
+   (removes numeric codes like "001" that appear under product names) */
+.drinks-sale .product-card .product-category {
+  display: none;
+}
+
+.product-price {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.add-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 6px 14px rgba(59,130,246,0.12);
+}
+
+.add-button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.add-button .add-plus {
+  display: inline-block;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+/* Page-scoped stronger selector to avoid other styles shrinking the button */
+.drinks-sale .product-card .add-button {
+  width: 56px !important;
+  height: 56px !important;
+  font-size: 22px !important;
+  border-radius: 50% !important;
+}
+
+/* New split control: visual label + small action button */
+.add-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.add-visual {
+  flex: 1 1 auto;
+  background: #3b82f6;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.95;
+  /* make sure it's not clickable */
+  pointer-events: none;
+}
+
+.add-action {
+  flex: 0 0 44px;
+  height: 44px;
+  background: #1e40af;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.add-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(30,64,175,0.12);
+}
+
+.cart-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cart-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.clear-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-button:hover {
+  background: #dc2626;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.empty-cart {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  margin: 40px 0;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.item-price {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-btn:hover {
+  background: #e5e7eb;
+}
+
+.quantity {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  min-width: 20px;
+  text-align: center;
+}
+
+.cart-footer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+
+.total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.total-amount {
+  font-size: 20px;
+  font-weight: 700;
+  /* darker color for the cart footer total to improve readability */
+  color: #0f9d63;
+}
+
+.submit-button {
+  width: 100%;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.submit-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  color: #64748b;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .drinks-content {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .cart-section {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .drinks-sale {
+    padding: 15px;
+  }
+  
+  .drinks-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .cart-summary {
+    justify-content: center;
+  }
+  
+  /* Ensure cart total remains high-contrast on smaller screens */
+  .cart-total {
+    background: #0f9d63; /* keep the darker green */
+    color: #ffffff;
+    padding: 10px 18px;
+    font-size: 15px;
+  }
+  .drinks-sale .cart-summary .cart-total {
+    background: #0f9d63 !important;
+    color: #ffffff !important;
+    padding: 10px 18px !important;
+    font-size: 15px !important;
+  }
+  .products-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box {
+    min-width: auto;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  /* Ensure add buttons are comfortably tappable on mobile */
+  .drinks-sale .product-card .add-button {
+    width: 100%;
+    padding: 14px 18px !important;
+    font-size: 16px !important;
+    min-height: 48px !important;
+  }
+  .add-wrapper {
+    gap: 10px;
+  }
+
+  .add-action {
+    flex: 0 0 52px;
+    height: 52px;
+    font-size: 20px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cart-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .item-controls {
+    justify-content: center;
+  }
+}
+
+/* High contrast adjustments for dark mode to keep totals readable */
+@media (prefers-color-scheme: dark) {
+  .cart-total,
+  .drinks-sale .cart-summary .cart-total {
+    background: #059669 !important; /* slightly brighter on dark backgrounds */
+    color: #e6ffef !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+  }
+
+  .total-amount {
+    color: #8ef4c7 !important;
+  }
+
+  /* Header text tweaks in dark mode */
+  .drinks-header h2 {
+    color: #f1f5f9;
+  }
+}

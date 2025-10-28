@@ -1,0 +1,40 @@
+/* Compact card styles for reservation mode */
+.room-card-reserving {
+  width: 180px !important;
+  height: 180px !important;
+  min-height: 180px !important;
+  padding: 10px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.room-card-reserving .room-details,
+.room-card-reserving .room-time-left,
+.room-card-reserving .room-price,
+.room-card-reserving .room-payment-info {
+  display: none !important;
+}
+
+.room-card-reserving .room-number {
+  font-size: 18px !important;
+  padding: 6px 8px !important;
+}
+
+/* Mobile: even smaller cards */
+@media (max-width: 480px) {
+  .room-card-reserving {
+    width: 160px !important;
+    height: 160px !important;
+    min-height: 160px !important;
+    padding: 8px !important;
+  }
+}
+
+/* Keep room actions visible but compact */
+.room-card-reserving .room-actions {
+  margin-top: auto !important;
+  gap: 4px !important;
+}

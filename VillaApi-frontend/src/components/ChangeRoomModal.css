@@ -1,0 +1,134 @@
+.change-room-modal {
+  max-width: 500px;
+  width: 90%;
+}
+
+.change-room-modal .modal-form {
+  padding: 20px;
+}
+
+.change-room-modal .current-room-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #007bff;
+}
+
+.change-room-modal .current-room-info h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.change-room-modal .current-room-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.change-room-modal .form-group {
+  margin-bottom: 20px;
+}
+
+.change-room-modal .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.change-room-modal .form-select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.change-room-modal .form-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.change-room-modal .form-select:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.change-room-modal .no-rooms-message {
+  text-align: center;
+  padding: 20px;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.change-room-modal .no-rooms-message p {
+  margin: 0;
+  color: #856404;
+  font-weight: 500;
+}
+
+.change-room-modal .error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+}
+
+.change-room-modal .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.change-room-modal .cancel-button,
+.change-room-modal .save-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.change-room-modal .cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.change-room-modal .cancel-button:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.change-room-modal .save-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.change-room-modal .save-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.change-room-modal .save-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.change-room-modal .cancel-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
