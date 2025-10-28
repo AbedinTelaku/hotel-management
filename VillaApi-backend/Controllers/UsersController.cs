@@ -156,11 +156,19 @@ namespace VillaApi.Controllers
 
         [HttpPost]
         [Route("Login")]
+        [AllowAnonymous]
         public async Task<ResponseDTO?> Login([FromForm]LoginRequestDTO request)
         {
             try
             {
                 var item = await _userRepository.Login(request);
+
+                if(item is null)
+                    return new ResponseDTO
+                    {
+                        IsSuccessfull = false,
+                        ErrorMessage = "Nuk jeni ne nderrim prandaj nuk keni qasje"
+                    };
 
                 var tokenItem = new TokenService();
 
@@ -211,6 +219,33 @@ namespace VillaApi.Controllers
                 Data = item
             };
         }
+
+        [HttpPost]
+        [Route("Users/Logout")]
+        public async Task<ResponseDTO?> Logout(int userId)
+        {
+            var item = await _userRepository.Logout(userId);
+
+            return new ResponseDTO
+            {
+                IsSuccessfull = true,
+                Data = item
+            };
+        }
+
+        [HttpPost]
+        [Route("Users/ResetLogout")]
+        public async Task<ResponseDTO?> ResetLogout()
+        {
+            var item = await _userRepository.ResetLogout();
+
+            return new ResponseDTO
+            {
+                IsSuccessfull = true,
+                Data = item
+            };
+        }
+
 
         [HttpPut]
         [Route("Users/UpdateStatus")]

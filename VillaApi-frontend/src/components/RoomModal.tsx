@@ -519,12 +519,7 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose, isEditMode
         setError('Orët duhet të jenë më të mëdha se 0');
         return;
       }
-
-      // Validate price for "Tjeter" booking type - must be greater than 0
-      if (bookingType === 'tjeter' && price.trim() && parseFloat(price) <= 0) {
-        setError('Çmimi duhet të jetë më i madh se 0');
-        return;
-      }
+     
     }
 
     // Save drinks info locally before submitting

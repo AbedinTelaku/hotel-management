@@ -21,5 +21,6 @@ namespace VillaApi.Models
         public bool IsDeleted { get; set; } = false;
 
         public bool IsAdmin { get; set; } = false;
+        public bool IsLoggedIn { get; set; } = false;
     }
 }

@@ -37,7 +37,9 @@ namespace VillaApi.Repository
                             Amount = s.Amount,
                             Employee = p.Username,
                             EnteredOn = s.EnteredOn,
-                            IsMistake = s.IsMistake
+                            IsMistake = s.IsMistake,
+                            IsForStaff = s.IsForStaff,
+                            IsMarket = s.SupplyAndSellItemsId != null
                         };
 
             return await items.ToListAsync();

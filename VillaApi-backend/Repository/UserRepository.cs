@@ -53,6 +53,12 @@ namespace VillaApi.Repository
             if (!item.IsActive)
                 throw new MyException(10);
 
+            if (item.IsAdmin == false && await _context.Users.AnyAsync(x => x.IsAdmin == false && x.IsLoggedIn && x.Id != item.Id))
+                return null;
+
+            item.IsLoggedIn = true;
+            await _context.SaveChangesAsync();
+
             return new UserDTO
             {
                 Id = item.Id,
@@ -117,6 +123,34 @@ namespace VillaApi.Repository
 
             existingItem.Username = item.Username;
             existingItem.IsActive = item.IsActive;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> Logout(int id)
+        {
+            var item = await _context.Users.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (item is null)
+                throw new MyException(8);
+
+            item.IsLoggedIn = false;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> ResetLogout()
+        {
+            var items = await _context.Users.ToListAsync();
+
+            foreach (var item in items)
+            {
+                item.IsLoggedIn = false;
+            }
 
             await _context.SaveChangesAsync();
 

@@ -7,7 +7,9 @@ export interface Payment {
   Employee: string;
   enteredOn: Date;
   isForStaff: boolean;
+  isMarket: boolean;
   Koha: string;
+  
 }
 
 export interface PaymentSummary {
@@ -15,6 +17,8 @@ export interface PaymentSummary {
   mistakeAmount: number;
   staffAmount: number;
   amount: number;
+  drink: number;
+  rooms: number;
 }
 
 class PaymentService {
@@ -69,8 +73,12 @@ class PaymentService {
       totalAmount: 0,
       mistakeAmount: 0,
       staffAmount: 0,
-      amount: 0
+      amount: 0,
+      drink: 0,
+      rooms: 0
     };
+
+    console.log(payments);
 
     payments.forEach(payment => {
       summary.totalAmount += payment.amount;
@@ -84,6 +92,11 @@ class PaymentService {
       else {
         summary.amount += payment.amount;
       }
+
+      if(payment.isMarket)
+        summary.drink += payment.amount;
+      else
+        summary.rooms += payment.amount;
 
     });
 

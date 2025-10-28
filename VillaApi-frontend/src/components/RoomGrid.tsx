@@ -703,7 +703,7 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                 className="market-staff-button"
                 title="Market për stafin (pa pagesë)"
               >
-                👥 Market per Staff
+                👥 Gratis
               </button>
               
               <button 
@@ -815,9 +815,11 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                     <span className="room-vehicle-info">
                       🚗 {room.tables}
                     </span>
-                    <span className="room-price">
-                      €{parseFloat(room.price || '0').toFixed(2)}
-                    </span>
+                   {room.amountDebt != null && room.amountDebt < 0 && (
+                  <span className="room-price">
+                    {parseFloat(room.amountDebt?.toString()).toFixed(2)}€
+                  </span>
+                )}
                   </div>
 
                   {/* Row 2: Booking Type (Pushim) - Left aligned, separate row */}
@@ -834,7 +836,7 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                 </motion.div>
               )}
               
-              {!room.bookingType && room.price && (
+              {/* {!room.bookingType && room.price && (
                 <motion.div 
                   className="room-price"
                   initial={{ opacity: 0 }}
@@ -845,7 +847,7 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                   €{room.price}
                 </motion.div>
               )}
-              
+               */}
               {/* Room management buttons */}
               <motion.div 
                 className="room-actions"

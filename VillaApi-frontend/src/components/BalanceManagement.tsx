@@ -20,22 +20,27 @@ const BalanceManagement: React.FC = () => {
     const mistake = payments.filter(payment => payment.isMistake).reduce((sum, payment) => sum + payment.amount, 0);
     const staff = payments.filter(payment => payment.isForStaff).reduce((sum, payment) => sum + payment.amount, 0);
     const settlement = total - mistake - staff; // Për barazim = Total - Gabim - Staff
-    
+    const drink = payments.filter(payment => payment.isMarket).reduce((sum, payment) => sum + payment.amount, 0);
+    const rooms = total - drink;
+
     console.log('💰 Payment breakdown:', {
       total,
       mistake,
       staff,
       settlement,
+      drink,
+      rooms,
       allPayments: payments.map(p => ({
         amount: p.amount,
         isMistake: p.isMistake,
         isForStaff: p.isForStaff,
         displayText: p.displayText,
-        Koha: p.Koha
+        Koha: p.Koha,
+
       }))
     });
     
-    return { total, mistake, staff, settlement };
+    return { total, mistake, staff, settlement, drink, rooms };
   };
 
   console.log('🔍 BalanceManagement render:', {
@@ -77,7 +82,7 @@ const BalanceManagement: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await paymentService.getRoomSettlementsByEmployee(employeeId);
+      const response = await paymentService.getPaymentsByEmployee(employeeId);
       if (response.isSuccessfull && response.data) {
         // Sort payments by latest date first (most recent at the top)
         const sortedPayments = response.data.sort((a: Payment, b: Payment) => {
@@ -366,8 +371,16 @@ const formatted = date.toLocaleString('en-GB', {
                             <span className="breakdown-value mistake">€{breakdown.mistake.toFixed(2)}</span>
                           </div>
                           <div className="breakdown-item">
-                            <span className="breakdown-label">Staff:</span>
+                            <span className="breakdown-label">Gratis:</span>
                             <span className="breakdown-value staff">€{breakdown.staff.toFixed(2)}</span>
+                          </div>
+                           <div className="breakdown-item">
+                            <span className="breakdown-label">Pije:</span>
+                            <span className="breakdown-value drink">€{breakdown.drink.toFixed(2)}</span>
+                          </div>
+                           <div className="breakdown-item">
+                            <span className="breakdown-label">Dhomat:</span>
+                            <span className="breakdown-value rooms">€{breakdown.rooms.toFixed(2)}</span>
                           </div>
                           <div className="breakdown-item">
                             <span className="breakdown-label">Për barazim:</span>

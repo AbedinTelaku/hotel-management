@@ -11,6 +11,8 @@ namespace VillaApi.IRepository
         Task<UserDTO?> GetById(int id);
         Task<UserDTO?> GetByUsername(string username);
         Task<bool> Update(UserDTO item);
+        Task<bool> Logout(int id);
+        Task<bool> ResetLogout();
         Task<bool> ChangePassword(int userId, string oldPassword, string password);
         Task<bool> UpdateStatus(int userId, bool isActive);
         Task<bool> Remove(int userId);

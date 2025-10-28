@@ -17,6 +17,8 @@ namespace VillaApi.Dtos
         public DateTime EnteredOn { get; set; }
 
         public bool IsForStaff { get; set; } = false;
+
+        public bool IsMarket { get; set;  }
        
         public string Koha { get { return EnteredOn.ToString("dd.MM.yyyy HH:mm"); } set { } }
     }
