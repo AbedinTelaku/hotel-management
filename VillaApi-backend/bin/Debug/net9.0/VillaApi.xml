@@ -61,6 +61,18 @@
         <member name="M:VillaApi.Migrations.AddIsForStaffColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:VillaApi.Migrations.AddIsLoggedInToUsers">
+            <inheritdoc />
+        </member>
+        <member name="M:VillaApi.Migrations.AddIsLoggedInToUsers.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VillaApi.Migrations.AddIsLoggedInToUsers.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VillaApi.Migrations.AddIsLoggedInToUsers.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:VillaApi.Utils.MessageDeleter.DeleteAllMessages">
             <summary>
             Deletes all messages from the database

@@ -12,6 +12,7 @@ import { supplyAndSellService } from '../services';
 import { suggestionCarNameService } from '../services/suggestionCarNameService';
 import { roomPriceService } from '../services/roomPriceService';
 import { roomTypeService } from '../services/roomTypeService';
+import ChangeRoomModal from './ChangeRoomModal';
 
 interface Room {
   id: number;
@@ -73,6 +74,7 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose, isEditMode
   const [showConfirmDebtModal, setShowConfirmDebtModal] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showChangeRoomModal, setShowChangeRoomModal] = useState(false);
 
   // Car autocomplete states
   const [carSuggestions, setCarSuggestions] = useState<string[]>([]);
@@ -1093,10 +1095,12 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose, isEditMode
                 </button>
               ) : null;
             })()}
-            {/* Ndrysho (submit) after Konfirmo */}
-            <button type="submit" className="save-button" disabled={isProcessing}>
-              {isProcessing ? 'Duke Përpunuar...' : (isEditMode ? 'Ndrysho' : 'Ruaj')}
-            </button>
+            {/* Ruaj vetëm kur dhoma nuk është e zënë; për të zëna përdoret "Ndrro dhomen" poshtë */}
+            {!(room.status === 'occupied') && (
+              <button type="submit" className="save-button" disabled={isProcessing}>
+                {isProcessing ? 'Duke Përpunuar...' : 'Ruaj'}
+              </button>
+            )}
             {room.status === 'occupied' && (
               <button 
                 type="button" 
@@ -1114,6 +1118,17 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose, isEditMode
                 data-free="true"
               >
                 Pije Gratis
+              </button>
+            )}
+            {/* Ndrro dhomen - nën Pije Gratis, hap ChangeRoomModal */}
+            {room.status === 'occupied' && room.roomMovementId && (
+              <button 
+                type="button" 
+                onClick={() => setShowChangeRoomModal(true)}
+                className="change-room-button"
+                title="Ndrro dhomen"
+              >
+                Ndrro dhomen
               </button>
             )}
             {room.status === 'occupied' && room.roomMovementId && (
@@ -1141,6 +1156,20 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose, isEditMode
 
 
 
+      {showChangeRoomModal && room.roomMovementId && (
+        <ChangeRoomModal
+          roomMovementId={room.roomMovementId}
+          currentRoomNo={String((room as any).name ?? '')}
+          roomModel={room.roomModel || ''}
+          onClose={() => setShowChangeRoomModal(false)}
+          onSuccess={() => {
+            // Refresh and close both modals completely
+            if (onRoomDataRefresh) onRoomDataRefresh();
+            setShowChangeRoomModal(false);
+            if (onClose) onClose();
+          }}
+        />
+      )}
       {showAddExtraModal && room.roomMovementId && (
         <AddExtraModal
           room={{

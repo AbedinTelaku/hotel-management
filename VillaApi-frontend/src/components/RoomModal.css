@@ -2175,6 +2175,10 @@ button.close-button:active {
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
+.change-room-button {
+  order: 4;
+}
+
 .close-room-button {
   background: #dc3545;
   color: white;

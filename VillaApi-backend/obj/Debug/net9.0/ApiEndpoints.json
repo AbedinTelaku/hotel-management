@@ -2201,6 +2201,32 @@
   },
   {
     "ContainingType": "VillaApi.Controllers.UsersController",
+    "Method": "Logout",
+    "RelativePath": "api/Users/Logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "VillaApi.ResponseDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "VillaApi.Controllers.UsersController",
     "Method": "Remove",
     "RelativePath": "api/Users/Remove",
     "HttpMethod": "DELETE",
@@ -2213,6 +2239,26 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": [
+      {
+        "Type": "VillaApi.ResponseDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "VillaApi.Controllers.UsersController",
+    "Method": "ResetLogout",
+    "RelativePath": "api/Users/ResetLogout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "VillaApi.ResponseDTO",

@@ -49,7 +49,8 @@ namespace VillaApi.Repository
         {
             var items = await _context.Payments.ToListAsync();
 
-            if (items?.Any() ?? false)
+            // Throw only when there is nothing to confirm
+            if (!(items?.Any() ?? false))
                 throw new MyException(29);
 
             _context.Payments.RemoveRange(items);
@@ -62,7 +63,8 @@ namespace VillaApi.Repository
         {
             var items = await _context.Payments.Where(s => s.EmployeeId == employeeId).ToListAsync();
 
-            if (items?.Any() ?? false)
+            // Throw only when this employee has nothing to confirm
+            if (!(items?.Any() ?? false))
                 throw new MyException(29);
 
             _context.Payments.RemoveRange(items);

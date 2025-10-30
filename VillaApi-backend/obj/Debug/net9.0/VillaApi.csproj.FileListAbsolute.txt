@@ -1455,4 +1455,5 @@ C:\Users\DELL PRECESION\Desktop\VillaAPI\VillaApi-backend\obj\Debug\net9.0\Villa
 C:\Users\DELL PRECESION\Desktop\VillaAPI\VillaApi-backend\obj\Debug\net9.0\VillaApi.pdb
 C:\Users\DELL PRECESION\Desktop\VillaAPI\VillaApi-backend\obj\Debug\net9.0\VillaApi.genruntimeconfig.cache
 C:\Users\DELL PRECESION\Desktop\VillaAPI\VillaApi-backend\obj\Debug\net9.0\ref\VillaApi.dll
+C:\Users\DELL PRECESION\Desktop\VillaAPI\VillaApi-backend\obj\Debug\net9.0\VillaApi.sourcelink.json
 C:\Users\DELL PRECESION\Desktop\VillaAPI\VillaApi-backend\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
