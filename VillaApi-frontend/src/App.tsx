@@ -11,6 +11,8 @@ import SimpleMarket from './components/SimpleMarket';
 import StaffView from './components/StaffView';
 import ChangePassword from './components/ChangePassword';
 import { authService } from './services';
+import * as signalR from '@microsoft/signalr';
+import { API_BASE_URL } from './config/api';
 import './App.css';
 
 interface User {
@@ -22,6 +24,9 @@ interface User {
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [pollDelayUntil, setPollDelayUntil] = useState<number>(0);
+  const [signalRConnected, setSignalRConnected] = useState<boolean>(false);
+  const [logoutVersion, setLogoutVersion] = useState<number>(Number(localStorage.getItem('logoutVersion') || 0));
 
   // Check for existing token on app load
   useEffect(() => {
@@ -57,6 +62,8 @@ function App() {
               role: role 
             });
             console.log('✅ User authenticated with existing token:', { username, role, isAdmin: payload.isAdmin });
+            // Grace period after (re)authentication to avoid race with server state
+            setPollDelayUntil(Date.now() + 7000);
           } catch (tokenError) {
             console.error('❌ Error decoding token:', tokenError);
             // Clear invalid token and logout
@@ -78,6 +85,79 @@ function App() {
     checkAuthStatus();
   }, []);
 
+  // Global SignalR listener for ForceLogout so it works on every page/device
+  useEffect(() => {
+    if (!user?.role) return; // wait until role is known
+    const hubBaseCfg = (API_BASE_URL || '').replace(/\/$/, '');
+    // Build hub url: use LAN IP + correct port (5210 for http, 7210 for https)
+    // Always use HTTPS hub on backend (7210) to avoid mixed-protocol issues
+    const hubUrl = hubBaseCfg.startsWith('/')
+      ? `https://${window.location.hostname}:7210/roomshub`
+      : `${hubBaseCfg.replace(/\/api$/, '')}/roomshub`;
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl(hubUrl)
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    connection.start().then(async () => {
+      // Join role-based group so server can target only workers
+      try {
+        if (user?.role === 'worker') {
+          await connection.invoke('JoinWorkers');
+        } else if (user?.role === 'admin') {
+          await connection.invoke('JoinAdmins');
+        }
+      } catch (e) {
+        console.error('Join group failed:', e);
+      }
+
+      connection.on('ForceLogout', () => {
+        console.log('🔒 [Global] ForceLogout received');
+        // Workers will receive targeted broadcast and logout
+        authService.logout();
+        window.location.reload();
+      });
+      setSignalRConnected(true);
+    }).catch(err => console.error('SignalR connect error:', err));
+
+    return () => {
+      try { connection.stop(); } catch {}
+      setSignalRConnected(false);
+    };
+  }, [user?.role]);
+
+  // Fallback polling: ensure logout happens even if SignalR isn't reachable (e.g., Safari)
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        // 1) Global version-based check (no auth needed)
+        const version = await authService.getLogoutVersion();
+        if (version && version > logoutVersion) {
+          localStorage.setItem('logoutVersion', String(version));
+          authService.logout();
+          window.location.reload();
+          return;
+        }
+        // 2) Per-user check (auth)
+        if (Date.now() < pollDelayUntil) return;
+        if (!authService.isAuthenticated()) return;
+        const shouldLogout = await authService.shouldLogout();
+        if (shouldLogout) {
+          authService.logout();
+          window.location.reload();
+        }
+      } catch (err) {
+        const status = (err as any)?.status;
+        if (status === 401 && authService.isAuthenticated()) {
+          authService.logout();
+          window.location.reload();
+        }
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [pollDelayUntil, logoutVersion]);
+
   const handleLogin = (userData: User) => {
     // SECURITY FIX: Only use the role provided by the backend, don't guess from username
     let role: User['role'] = 'worker';
@@ -86,6 +166,8 @@ function App() {
     }
     // Remove dangerous username-based role detection
     setUser({ ...userData, role });
+    // Grace period after login to avoid any race with server state
+    setPollDelayUntil(Date.now() + 7000);
   };
 
   const handleLogout = () => {

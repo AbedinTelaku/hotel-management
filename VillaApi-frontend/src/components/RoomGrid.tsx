@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import RoomModal from './RoomModal';
@@ -8,6 +8,8 @@ import useRealTimeTimer from '../hooks/useRealTimeTimer';
 import './RoomGrid.css';
 import './RoomGrid.reserving.css';
 import * as signalR from "@microsoft/signalr";
+import { API_BASE_URL } from '../config/api';
+import authService from '../services/authService';
 
 interface Room {
   id: number;
@@ -116,11 +118,13 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
+  const hubConnectionRef = useRef<signalR.HubConnection | null>(null);
   const [error, setError] = useState('');
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [showConfirmLogout, setShowConfirmLogout] = useState(false);
 
   // Load rooms from API
   useEffect(() => {
@@ -241,8 +245,13 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
 
   useEffect(() => {
   // Create SignalR connection
+  const baseCfg = (API_BASE_URL || '').replace(/\/$/, '');
+  // Always use HTTPS hub on backend (7210)
+  const hubUrl = baseCfg.startsWith('/')
+    ? `https://${window.location.hostname}:7210/roomshub`
+    : `${baseCfg.replace(/\/api$/, '')}/roomshub`;
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7210/roomshub") // Adjust port if your API runs elsewhere
+    .withUrl(hubUrl)
     .withAutomaticReconnect()
     .configureLogging(signalR.LogLevel.Information)
     .build();
@@ -250,13 +259,34 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
   // Start connection and listen for room updates
   connection
     .start()
-    .then(() => {
+    .then(async () => {
       console.log("✅ Connected to RoomsHub successfully");
+      hubConnectionRef.current = connection;
+
+      // Join group based on role so server can target workers
+      try {
+        if (userRole === 'worker') {
+          await connection.invoke('JoinWorkers');
+          console.log('👥 Joined workers group');
+        } else if (userRole === 'admin') {
+          await connection.invoke('JoinAdmins');
+          console.log('🛡️ Joined admins group');
+        }
+      } catch (e) {
+        console.error('❌ Failed to join SignalR group:', e);
+      }
 
       connection.on("RoomHasBeenUpdated", (roomNo) => {
         console.log("🛰️ RoomHasBeenUpdated received from API for room:", roomNo);
         // Trigger a refresh when the backend notifies us
         loadRooms();
+      });
+
+      // Real-time force logout (RoomGrid listener kept as backup)
+      connection.on("ForceLogout", () => {
+        console.log("🔒 ForceLogout received from API [RoomGrid]");
+        try { authService.logout(); } catch {}
+        window.location.reload();
       });
     })
     .catch((err) => console.error("❌ Error connecting to SignalR hub:", err));
@@ -266,6 +296,7 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
     if (connection) {
       console.log("🔌 Disconnecting from RoomsHub...");
       connection.stop();
+      hubConnectionRef.current = null;
     }
   };
 }, []);
@@ -479,6 +510,8 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                 ? {
                     ...room,
                     ...bookingData,
+                    // Ensure numeric hours in state
+                    hours: bookingData.hours ? Number(bookingData.hours) : room.hours,
                     // Preserve status and movementId
                     status: 'occupied',
                     roomMovementId: room.roomMovementId,
@@ -529,6 +562,8 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                   ? {
                       ...room,
                       ...bookingData,
+                      // Ensure numeric hours in state
+                      hours: bookingData.hours ? Number(bookingData.hours) : room.hours,
                       status: 'occupied' as const,
                       roomMovementId: response.data,
                       startTime: bookingData.startTime || new Date().toISOString(),
@@ -734,6 +769,14 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
               >
                 👑 Paneli i Administratorit
               </button>
+
+              <button
+                onClick={() => setShowConfirmLogout(true)}
+                className="admin-button"
+                title="Shkyç të gjithë punëtorët"
+              >
+                🔒 Shkyq punëtorët
+              </button>
             </>
           )}
         </div>
@@ -815,11 +858,25 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
                     <span className="room-vehicle-info">
                       🚗 {room.tables}
                     </span>
-                   {room.amountDebt != null && room.amountDebt < 0 && (
-                  <span className="room-price">
-                    {parseFloat(room.amountDebt?.toString()).toFixed(2)}€
-                  </span>
-                )}
+                   {(() => {
+                    // If there's debt (amountDebt is negative from API), show it with minus sign
+                    if (room.amountDebt != null && room.amountDebt < 0) {
+                      return (
+                        <span className="room-price">
+                          {parseFloat(room.amountDebt.toString()).toFixed(2)}€
+                        </span>
+                      );
+                    }
+                    // Otherwise show normal price
+                    if (room.price && parseFloat(room.price) > 0) {
+                      return (
+                        <span className="room-price">
+                          {parseFloat(room.price).toFixed(2)}€
+                        </span>
+                      );
+                    }
+                    return null;
+                  })()}
                   </div>
 
                   {/* Row 2: Booking Type (Pushim) - Left aligned, separate row */}
@@ -906,6 +963,59 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
           ))}
         </AnimatePresence>
       </motion.div>
+
+      {showConfirmLogout && (
+        <>
+          <style>{`
+            .confirm-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
+            .confirm-modal{background:#fff;border-radius:14px;padding:20px 18px;width:min(92vw,520px);max-width:520px;box-shadow:0 12px 40px rgba(0,0,0,.2);color:#111}
+            .confirm-modal h2{margin:0 0 8px 0;font-size:20px;line-height:1.3;color:#111}
+            .confirm-modal p{margin:0 0 18px 0;font-size:14px;color:#111}
+            .confirm-actions{display:flex;gap:12px;justify-content:flex-end}
+            .confirm-btn{padding:12px 14px;border-radius:10px;font-weight:600}
+            .btn-cancel{border:1px solid #d0d0d0;background:#f7f7f7;color:#111}
+            .btn-danger{border:none;background:linear-gradient(90deg,#ff416c,#ff4b2b);color:#fff}
+            @media (max-width:480px){
+              .confirm-actions{flex-direction:column}
+              .confirm-btn{width:100%}
+              .confirm-modal{padding:18px 14px}
+              .confirm-modal h2{font-size:18px}
+              .confirm-modal p{font-size:13px}
+            }
+          `}</style>
+          <div className="confirm-modal-overlay" onClick={() => setShowConfirmLogout(false)}>
+            <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
+              <h2>Shkyq të gjithë përdoruesit?</h2>
+              <p>
+                A dëshironi të shkyçni çdo user, duke përfshirë edhe adminin? Ky veprim i nxjerr të gjithë menjëherë në login.
+              </p>
+              <div className="confirm-actions">
+                <button className="confirm-btn btn-cancel" onClick={() => setShowConfirmLogout(false)}>
+                  Anulo
+                </button>
+                <button
+                  className="confirm-btn btn-danger"
+                  onClick={async () => {
+                    try {
+                      const res = await authService.logoutAllUsers();
+                      if (res.isSuccessfull) {
+                        try { await hubConnectionRef.current?.invoke('ForceLogout'); } catch {}
+                        setShowConfirmLogout(false);
+                      } else {
+                        alert(res.errorMessage || 'Veprimi dështoi');
+                      }
+                    } catch {
+                      alert('Ndodhi një gabim gjatë shkyçjes së përdoruesve.');
+                    }
+                  }}
+                >
+                  Po, shkyq të gjithë
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {isModalOpen && selectedRoom && (
         <RoomModal

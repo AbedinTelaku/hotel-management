@@ -245,6 +245,14 @@ namespace VillaApi.Repository
             return true;
         }
 
+        public async Task<bool> GetIsLoggedIn(int userId)
+        {
+            var item = await _context.Users.FirstOrDefaultAsync(s => s.Id == userId);
+            if (item is null)
+                throw new MyException(8);
+            return item.IsLoggedIn;
+        }
+
 
     }
 }
