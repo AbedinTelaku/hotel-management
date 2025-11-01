@@ -37,19 +37,29 @@ const ChangeRoomModal: React.FC<ChangeRoomModalProps> = ({
     try {
       setLoading(true);
       setError('');
-      
-      const response = await roomService.getAvailableRooms(roomModel);
-      
+
+      // Fetch all rooms and then filter locally to only available (isOpen === false)
+      const response = await roomService.getRooms();
+
       if (response.isSuccessfull && response.data) {
-        // Filter out current room from available rooms
-        const filteredRooms = response.data.filter(room => room.roomNo !== currentRoomNo);
+        const allRooms = response.data;
+        const available = allRooms.filter(r => !r.isOpen);
+        const filteredRooms = available
+          .filter(room => room.roomNo !== currentRoomNo)
+          .map(r => ({
+            roomNo: r.roomNo,
+            title: r.title,
+            roomModel: r.roomModel,
+            isActive: true
+          }));
+
         setAvailableRooms(filteredRooms);
-        
+
         if (filteredRooms.length > 0) {
           setSelectedRoomNo(filteredRooms[0].roomNo);
         }
       } else {
-        throw new Error('Failed to load available rooms');
+        throw new Error('Failed to load rooms');
       }
     } catch (error) {
       console.error('Error loading available rooms:', error);
@@ -97,7 +107,7 @@ const ChangeRoomModal: React.FC<ChangeRoomModalProps> = ({
     <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="modal-content change-room-modal">
         <div className="modal-header">
-          <h2>Ndrysho Dhomën</h2>
+          <h2>Ndrro dhomen</h2>
           <button className="close-button" onClick={onClose} disabled={loading}>
             ×
           </button>
@@ -119,11 +129,17 @@ const ChangeRoomModal: React.FC<ChangeRoomModalProps> = ({
               disabled={loading}
             >
               <option value="">Zgjidhni dhomën e re</option>
-              {availableRooms.map((room) => (
-                <option key={room.roomNo} value={room.roomNo}>
-                  {room.title} ({room.roomNo})
-                </option>
-              ))}
+              {availableRooms.map((room) => {
+                const isNumeric = /^\d+$/.test(room.roomNo);
+                const label = isNumeric
+                  ? `Dhoma ${room.roomNo.padStart(2, '0')}`
+                  : `Dhoma ${room.roomNo.replace(/\s+/g, ' ').trim()}`;
+                return (
+                  <option key={room.roomNo} value={room.roomNo}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -137,19 +153,11 @@ const ChangeRoomModal: React.FC<ChangeRoomModalProps> = ({
 
           <div className="modal-actions">
             <button 
-              type="button" 
-              onClick={onClose} 
-              className="cancel-button"
-              disabled={loading}
-            >
-              Anulo
-            </button>
-            <button 
               type="submit" 
               className="save-button"
               disabled={loading || !selectedRoomNo || availableRooms.length === 0}
             >
-              {loading ? 'Duke Ndryshuar...' : 'Ndrysho Dhomën'}
+              {loading ? 'Duke ndrruar...' : 'Ndrro dhomen'}
             </button>
           </div>
         </form>

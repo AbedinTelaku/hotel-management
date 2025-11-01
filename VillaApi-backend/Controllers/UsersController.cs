@@ -1,20 +1,29 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using VillaApi.Dtos;
 using VillaApi.IRepository;
 using VillaApi.Repository;
+using VillaApi.Hubs;
 
 namespace VillaApi.Controllers
 {
+    public static class GlobalFlags
+    {
+        // Updated each time admin triggers ResetLogout
+        public static long LastGlobalLogoutVersion = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    }
     [Route("api/")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         IUserRepository _userRepository;
-        public UsersController(IUserRepository userRepository)
+        private readonly IHubContext<RoomsHub> _hubContext;
+        public UsersController(IUserRepository userRepository, IHubContext<RoomsHub> hubContext)
         {
             _userRepository = userRepository;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -239,10 +248,27 @@ namespace VillaApi.Controllers
         {
             var item = await _userRepository.ResetLogout();
 
+            // Notify ALL connected clients (admin + workers) to force logout
+            await _hubContext.Clients.All.SendCoreAsync("ForceLogout", Array.Empty<object?>());
+
+            // Bump global logout version so polling clients (e.g., Safari) can detect it
+            GlobalFlags.LastGlobalLogoutVersion = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
             return new ResponseDTO
             {
                 IsSuccessfull = true,
                 Data = item
+            };
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Users/LogoutVersion")]
+        public ResponseDTO? GetLogoutVersion()
+        {
+            return new ResponseDTO
+            {
+                IsSuccessfull = true,
+                Data = GlobalFlags.LastGlobalLogoutVersion
             };
         }
 
@@ -410,6 +436,29 @@ namespace VillaApi.Controllers
                     IsSuccessfull = false,
                     ErrorMessage = ex.Message
                 };
+            }
+        }
+
+        [HttpGet]
+        [Route("Users/ShouldLogout")]
+        [Authorize]
+        public async Task<ResponseDTO?> ShouldLogout()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    // Don't force logout if we can't determine user from token
+                    return new ResponseDTO { IsSuccessfull = true, Data = false };
+                }
+                var isLoggedIn = await _userRepository.GetIsLoggedIn(userId);
+                return new ResponseDTO { IsSuccessfull = true, Data = !isLoggedIn };
+            }
+            catch
+            {
+                // On error, do not force logout to avoid accidental kicks after login
+                return new ResponseDTO { IsSuccessfull = true, Data = false };
             }
         }
 

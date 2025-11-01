@@ -19,5 +19,7 @@ namespace VillaApi.IRepository
         Task<bool> SetDefaultPassword(int userId);
         Task<bool> UpdateAdminStatus(int userId, bool isAdmin);
         Task<bool> Delete(int id);
+        Task<bool> GetIsLoggedIn(int userId);
+        
     }
 }

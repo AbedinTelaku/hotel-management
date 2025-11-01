@@ -95,10 +95,8 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-            .WithOrigins(
-                "http://localhost:5173",    // ← React Vite dev server
-                "https://localhost:5173"    // ← if running React on HTTPS
-            )
+            // Allow any origin during development (including LAN IPs like 192.168.x.x)
+            .SetIsOriginAllowed(_ => true)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

@@ -69,7 +69,11 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const err: ApiError = {
+          message: `HTTP error! status: ${response.status}`,
+          status: response.status,
+        };
+        throw err;
       }
 
       const data = await response.json();
@@ -138,7 +142,11 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const err: ApiError = {
+          message: `HTTP error! status: ${response.status}`,
+          status: response.status,
+        };
+        throw err;
       }
 
       const data = await response.json();

@@ -97,6 +97,30 @@ class AuthService {
     }
   }
 
+  async logoutAllUsers(): Promise<ApiResponse<boolean>> {
+    try {
+      return await apiService.post<boolean>('/Users/ResetLogout');
+    } catch (error) {
+      console.error('Logout all users failed:', error);
+      throw error;
+    }
+  }
+
+  async shouldLogout(): Promise<boolean> {
+    try {
+      const resp = await apiService.get<boolean>('/Users/ShouldLogout');
+      return !!resp.data;
+    } catch (e) {
+      // If unauthorized, do NOT signal logout here; the caller will decide
+      return false;
+    }
+  }
+
+  async getLogoutVersion(): Promise<number> {
+    const resp = await apiService.get<number>('/Users/LogoutVersion');
+    return Number(resp.data || 0);
+  }
+
   logout() {
     apiService.clearToken();
   }
