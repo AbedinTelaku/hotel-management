@@ -1,0 +1,19 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/VillaApi-backend/.vs
+/VillaApi-backend/obj/Debug/net9.0/apphost.exe
+/VillaApi-backend/obj/Debug/net9.0/rpswa.dswa.cache.json
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.AssemblyInfo.cs
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.AssemblyInfoInputs.cache
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.assets.cache
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.csproj.AssemblyReference.cache
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.GeneratedMSBuildEditorConfig.editorconfig
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.GlobalUsings.g.cs
+/VillaApi-backend/obj/Debug/net9.0/VillaApi.sourcelink.json
+/VillaApi-backend/obj/project.assets.json
+/VillaApi-backend/obj/project.nuget.cache
+/VillaApi-backend/obj/VillaApi.csproj.nuget.dgspec.json
+/VillaApi-backend/obj/VillaApi.csproj.nuget.g.props
