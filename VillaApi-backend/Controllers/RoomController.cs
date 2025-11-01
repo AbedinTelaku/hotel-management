@@ -21,35 +21,15 @@ namespace VillaApi.Controllers
     {
         IRoomRepository _repo;
         IHubContext<RoomsHub> _hubContext;
-        public RoomController(IRoomRepository repo, IHubContext<RoomsHub> hubContext)
+        private readonly LicenseInformation _license;
+        public RoomController(IRoomRepository repo, IHubContext<RoomsHub> hubContext, LicenseInformation license)
         {
             _repo = repo;
             _hubContext = hubContext;
+            _license = license;
         }
-        
-        // private void CheckLicense()
-        // { 
-        //     using (XmlReader reader = XmlReader.Create(@"license.xml"))
-        //     {
-        //        var license = License.Load(reader);
-        //         var publicKey = "MIIBKjCB4wYHKoZIzj0CATCB1wIBATAsBgcqhkjOPQEBAiEA/////wAAAAEAAAAAAAAAAAAAAAD///////////////8wWwQg/////wAAAAEAAAAAAAAAAAAAAAD///////////////wEIFrGNdiqOpPns+u9VXaYhrxlHQawzFOw9jvOPD4n0mBLAxUAxJ02CIbnBJNqZnjhE50mt4GffpAEIQNrF9Hy4SxCR/i85uVjpEDydwN9gS3rM6D0oTlF2JjClgIhAP////8AAAAA//////////+85vqtpxeehPO5ysL8YyVRAgEBA0IABBrQVesCMpkBqLTpfDPjDNI3q681zTxiulIps8hSuRmvfGPccRJvyjcfRWKMdXse+vhVMot4FPR+pPoJpXP8nQ0=";
-        //         var validationFailures = license.Validate()
-        //                             .ExpirationDate()
-        //                             .When(lic => lic.Type == LicenseType.Standard)
-        //                             .And()
-        //                             .Signature(publicKey)
-        //                             .AssertValidLicense();
 
-        //         string errors = "";
-        //         foreach (var error in validationFailures)
-        //         {
-        //             errors += "\n" + error;
-        //         }
-
-        //         throw new MyExceptionMessage(errors);
-        //     }
-            
-        // }
+       
 
         [HttpGet]
         public async Task<ResponseDTO?> GetAllRooms()
@@ -139,7 +119,10 @@ namespace VillaApi.Controllers
         [HttpGet]
         public async Task<ResponseDTO?> GetRooms()
         {
-            // CheckLicense(); // Temporarily disabled due to expired license
+            if (_license.ShowMessageAlert && !_license.AlertOpen)
+            {
+                await _hubContext.Clients.All.SendCoreAsync("LicenseExpire", new object[] { _license.GetMessgeToDisplay() });
+            }
 
             var response = await _repo.GetRooms();
 

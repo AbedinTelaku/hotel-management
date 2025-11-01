@@ -282,6 +282,12 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
         loadRooms();
       });
 
+      connection.on("LicenseExpire", (messageText) => {
+        console.log("🛰️ LicenseExpire:", messageText);
+        // Trigger a refresh when the backend notifies us
+        alert(messageText);
+      });
+
       // Real-time force logout (RoomGrid listener kept as backup)
       connection.on("ForceLogout", () => {
         console.log("🔒 ForceLogout received from API [RoomGrid]");

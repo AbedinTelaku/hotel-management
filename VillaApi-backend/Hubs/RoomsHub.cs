@@ -24,5 +24,7 @@ namespace VillaApi.Hubs
         {
             return Groups.AddToGroupAsync(Context.ConnectionId, "admins");
         }
+       
+
     }
 }

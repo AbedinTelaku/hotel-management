@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using VillaApi;
 using VillaApi.Hubs;
+using VillaApi.Repository;
 using VillaApi.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
 
 // Register repositories
+builder.Services.AddSingleton<LicenseInformation>();
+builder.Services.AddHostedService<BackgroundServiceForLicense>();
+
 builder.Services.AddScoped<VillaApi.IRepository.IMessageRepository, VillaApi.Repository.MessageRepository>();
 builder.Services.AddScoped<VillaApi.IRepository.IUserRepository, VillaApi.Repository.UserRepository>();
 builder.Services.AddScoped<VillaApi.IRepository.ISuggestionCarNameRepository, VillaApi.Repository.SuggestionCarNameRepository>();
