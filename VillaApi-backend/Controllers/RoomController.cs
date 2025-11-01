@@ -6,6 +6,7 @@ using Portable.Licensing;
 using Portable.Licensing.Validation;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
+using VillaApi.Dtos;
 using VillaApi.DtosParameters;
 using VillaApi.Hubs;
 using VillaApi.IRepository;
@@ -119,10 +120,21 @@ namespace VillaApi.Controllers
         [HttpGet]
         public async Task<ResponseDTO?> GetRooms()
         {
+            if (!_license.IsValid)
+            {
+                return new ResponseDTO
+                {
+                    IsSuccessfull = false,
+                    ErrorMessage = _license.GetMessgeToDisplay()
+                    ,Data = new List<RoomViewDTO>()
+                };
+            }
+
+
             if (_license.ShowMessageAlert && !_license.AlertOpen)
             {
                 await _hubContext.Clients.All.SendCoreAsync("LicenseExpire", new object[] { _license.GetMessgeToDisplay() });
-            }
+            }      
 
             var response = await _repo.GetRooms();
 
