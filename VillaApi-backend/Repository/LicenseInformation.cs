@@ -6,6 +6,8 @@ namespace VillaApi.Repository
 {
     public class LicenseInformation
     {
+        private const string LicenseKey = "MIIBKjCB4wYHKoZIzj0CATCB1wIBATAsBgcqhkjOPQEBAiEA/////wAAAAEAAAAAAAAAAAAAAAD///////////////8wWwQg/////wAAAAEAAAAAAAAAAAAAAAD///////////////wEIFrGNdiqOpPns+u9VXaYhrxlHQawzFOw9jvOPD4n0mBLAxUAxJ02CIbnBJNqZnjhE50mt4GffpAEIQNrF9Hy4SxCR/i85uVjpEDydwN9gS3rM6D0oTlF2JjClgIhAP////8AAAAA//////////+85vqtpxeehPO5ysL8YyVRAgEBA0IABPd8TFKtx9WyVy7hEvQtfOqzlL5hmtz1T9GjVwf74YPkuG3obDSUFVMEWGFjDTLByhBJtOgCZTsQnTsGARcb93Q=";
+       
         public bool IsValid { get; private set; } = true;
 
         public DateTime ExpireAt { get; private set; } = DateTime.Today.AddDays(5);
@@ -28,7 +30,8 @@ namespace VillaApi.Repository
                     license.Validate()
                         .ExpirationDate()
                         .And()
-                        .Signature(publicKey)
+                       // .Signature(publicKey)
+                        .Signature(LicenseKey)
                         .AssertValidLicense(); // throws if invalid
 
                     if (license.Expiration > DateTime.Now)
@@ -94,6 +97,8 @@ namespace VillaApi.Repository
             };
             string messageText = $"Licensa do te skadoj me daten {ExpireAt.Day} {muaji}";
             messageText += "\nJu lutem kontaktoni me programerin per te vazhduar te shfrytezoni aplikacionin";
+            messageText += "\nAbedini:  049/658-213";
+            messageText += "\nMuhameti:  049/880-446";
 
             return messageText;
         }
