@@ -30,12 +30,8 @@ namespace VillaApi.Models
 
         public int CreatedBy { get; set; }
 
-        [ForeignKey(nameof(CreatedBy))]
-        public Users CreatedUser { get; set; }
 
         public int? CashierId { get; set; }
 
-        [ForeignKey(nameof(CashierId))]
-        public Users? CashierUser { get; set; }
     }
 }

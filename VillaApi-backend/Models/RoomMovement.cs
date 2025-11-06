@@ -37,9 +37,6 @@ namespace VillaApi.Models
 
         public int EnteredBy { get; set; }
 
-        [ForeignKey(nameof(EnteredBy))]
-        public Users Users { get; set; }
-
         public DateTime EnteredOn { get; set; } = DateTime.Now;
     }
 }

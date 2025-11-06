@@ -68,6 +68,14 @@ class ApiService {
         headers,
       });
 
+      // Handle unauthorized (401)
+      if (response.status === 401) {
+        console.warn('🚫 Unauthorized! Clearing stored token...');
+        this.clearToken();
+        window.location.href = '/login';
+        throw { message: 'Unauthorized. Token cleared.', status: 401 } as ApiError;
+      }
+
       if (!response.ok) {
         const err: ApiError = {
           message: `HTTP error! status: ${response.status}`,
@@ -140,6 +148,14 @@ class ApiService {
         headers,
         body: formData,
       });
+
+      // Handle unauthorized (401)
+      if (response.status === 401) {
+        console.warn('🚫 Unauthorized! Clearing stored token...');
+        this.clearToken();
+        window.location.href = '/login';
+        throw { message: 'Unauthorized. Token cleared.', status: 401 } as ApiError;
+      }
 
       if (!response.ok) {
         const err: ApiError = {

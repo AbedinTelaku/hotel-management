@@ -23,6 +23,7 @@ namespace VillaApi
     public class TokenService
     {
         private SymmetricSecurityKey _mySecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenKeys._mySecret));
+        
         public string CreateToken(UserDTO user)
         {
             var token = CreateJwtToken(

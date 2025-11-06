@@ -106,21 +106,6 @@ class AuthService {
     }
   }
 
-  async shouldLogout(): Promise<boolean> {
-    try {
-      const resp = await apiService.get<boolean>('/Users/ShouldLogout');
-      return !!resp.data;
-    } catch (e) {
-      // If unauthorized, do NOT signal logout here; the caller will decide
-      return false;
-    }
-  }
-
-  async getLogoutVersion(): Promise<number> {
-    const resp = await apiService.get<number>('/Users/LogoutVersion');
-    return Number(resp.data || 0);
-  }
-
   logout() {
     apiService.clearToken();
   }

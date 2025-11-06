@@ -9,6 +9,12 @@ namespace VillaApi.Hubs
             await Clients.All.SendCoreAsync("RoomHasBeenUpdated", new object[] { roomNo });
         }
 
+        public async Task Disconnect(string connectionId)
+        {
+            await Clients.Client(connectionId).SendCoreAsync("RoomHasBeenUpdated", new object[] {  });
+            Context.Abort();
+        }
+
         public async Task ForceLogout()
         {
             await Clients.All.SendCoreAsync("ForceLogout", Array.Empty<object?>());

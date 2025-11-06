@@ -127,37 +127,6 @@ function App() {
     };
   }, [user?.role]);
 
-  // Fallback polling: ensure logout happens even if SignalR isn't reachable (e.g., Safari)
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        // 1) Global version-based check (no auth needed)
-        const version = await authService.getLogoutVersion();
-        if (version && version > logoutVersion) {
-          localStorage.setItem('logoutVersion', String(version));
-          authService.logout();
-          window.location.reload();
-          return;
-        }
-        // 2) Per-user check (auth)
-        if (Date.now() < pollDelayUntil) return;
-        if (!authService.isAuthenticated()) return;
-        const shouldLogout = await authService.shouldLogout();
-        if (shouldLogout) {
-          authService.logout();
-          window.location.reload();
-        }
-      } catch (err) {
-        const status = (err as any)?.status;
-        if (status === 401 && authService.isAuthenticated()) {
-          authService.logout();
-          window.location.reload();
-        }
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [pollDelayUntil, logoutVersion]);
-
   const handleLogin = (userData: User) => {
     // SECURITY FIX: Only use the role provided by the backend, don't guess from username
     let role: User['role'] = 'worker';
@@ -169,6 +138,8 @@ function App() {
     // Grace period after login to avoid any race with server state
     setPollDelayUntil(Date.now() + 7000);
   };
+
+
 
   const handleLogout = () => {
     console.log('🚪 Logging out user...');

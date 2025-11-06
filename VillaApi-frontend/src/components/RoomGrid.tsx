@@ -288,12 +288,6 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
         alert(messageText);
       });
 
-      // Real-time force logout (RoomGrid listener kept as backup)
-      connection.on("ForceLogout", () => {
-        console.log("🔒 ForceLogout received from API [RoomGrid]");
-        try { authService.logout(); } catch {}
-        window.location.reload();
-      });
     })
     .catch((err) => console.error("❌ Error connecting to SignalR hub:", err));
 

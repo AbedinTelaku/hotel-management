@@ -15,6 +15,8 @@ namespace VillaApi
         }
 
         public DbSet<Users> Users { get; set; }
+        public DbSet<LoginToken> LoginTokens { get; set; }  
+        public DbSet<BlockToken> BlockTokens { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Product> Products { get; set; }
 

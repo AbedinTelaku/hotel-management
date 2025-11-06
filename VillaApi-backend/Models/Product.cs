@@ -22,9 +22,6 @@ namespace VillaApi.Models
         [StringLength(50)]
         public string Category { get; set; }
 
-        [ForeignKey(nameof(Category))]
-        public ProductCategory ProductCategory { get; set; }
-
         [Precision(18, 2)]
         public decimal Price { get; set; } = 0;
 
@@ -40,9 +37,6 @@ namespace VillaApi.Models
         public int Stock { get; set; } // Sasia ne stok
 
         public int EnteredBy { get; set; }
-
-        [ForeignKey(nameof(EnteredBy))]
-        public Users Users { get; set; }
 
         public DateTime EnteredOn { get; set; } = DateTime.Now;
 

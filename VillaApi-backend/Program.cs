@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ using System.Reflection;
 using System.Text;
 using VillaApi;
 using VillaApi.Hubs;
+using VillaApi.IRepository;
 using VillaApi.Repository;
 using VillaApi.Utils;
 
@@ -31,6 +33,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 builder.Services.AddSingleton<LicenseInformation>();
 builder.Services.AddHostedService<BackgroundServiceForLicense>();
 
+builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<VillaApi.IRepository.IMessageRepository, VillaApi.Repository.MessageRepository>();
 builder.Services.AddScoped<VillaApi.IRepository.IUserRepository, VillaApi.Repository.UserRepository>();
 builder.Services.AddScoped<VillaApi.IRepository.ISuggestionCarNameRepository, VillaApi.Repository.SuggestionCarNameRepository>();
@@ -44,10 +47,14 @@ builder.Services.AddScoped<VillaApi.IRepository.IProductRepository, VillaApi.Rep
 builder.Services.AddScoped<VillaApi.IRepository.IProductCategoryRepository, VillaApi.Repository.ProductCategoryRepository>();
 builder.Services.AddScoped<VillaApi.IRepository.IPrivilegeRepository, VillaApi.Repository.PrivilegeRepository>();
 
+
 // Register services
 builder.Services.AddScoped<VillaApi.MyMessages>();
 
-builder.Services.AddTransient<ErrorHandlerMiddleware>();
+builder.Services.AddScoped<ErrorHandlerMiddleware>();
+
+builder.Services.AddHostedService<BlockTokenBackgroundService>();
+builder.Services.AddScoped<BlockTokenMiddleware>();
 
 builder.Services.AddAuthentication()
         .AddJwtBearer(options =>
@@ -160,6 +167,9 @@ builder.Services.AddSwaggerGen(c => {
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSignalR();
+    
+
+builder.Services.AddScoped<SeedData>();
 
 var app = builder.Build();
 
@@ -174,6 +184,8 @@ app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
+app.UseMiddleware<BlockTokenMiddleware>();
+
 app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
@@ -185,14 +197,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapHub<RoomsHub>("roomshub");
-
-// Seed product categories, products, and extra room type
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<MyDbContext>();
-    await SeedProductCategories.SeedCategories(context);
-    await SeedProducts.SeedProductsData(context);
-    await SeedExtraRoomType.SeedExtraRoomTypeAsync(context);
-}
 
 app.Run();

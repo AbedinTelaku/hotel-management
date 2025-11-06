@@ -2,28 +2,26 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using NuGet.Common;
 using VillaApi.Dtos;
+using VillaApi.Hubs;
 using VillaApi.IRepository;
 using VillaApi.Repository;
-using VillaApi.Hubs;
 
 namespace VillaApi.Controllers
 {
-    public static class GlobalFlags
-    {
-        // Updated each time admin triggers ResetLogout
-        public static long LastGlobalLogoutVersion = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-    }
     [Route("api/")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         IUserRepository _userRepository;
         private readonly IHubContext<RoomsHub> _hubContext;
-        public UsersController(IUserRepository userRepository, IHubContext<RoomsHub> hubContext)
+        private readonly TokenService tokenService;
+        public UsersController(IUserRepository userRepository, IHubContext<RoomsHub> hubContext, TokenService myTokenService)
         {
             _userRepository = userRepository;
             _hubContext = hubContext;
+            tokenService = myTokenService;
         }
 
         [HttpGet]
@@ -92,9 +90,6 @@ namespace VillaApi.Controllers
                     };
                 }
                 
-                // Debug logging
-                Console.WriteLine($"Register attempt - Username: {request.Username}, Password: {(string.IsNullOrEmpty(request.Password) ? "EMPTY" : "PROVIDED")}, IsAdmin: {request.IsAdmin}");
-                
                 if (string.IsNullOrEmpty(request.Username))
                 {
                     return new ResponseDTO
@@ -117,19 +112,11 @@ namespace VillaApi.Controllers
 
                 if (response)
                 {
-                    // After successful registration, create a token for the user
-                    var user = await _userRepository.GetByUsername(request.Username);
-                    if (user != null)
+                    return new ResponseDTO
                     {
-                        var tokenItem = new TokenService();
-                        var token = tokenItem.CreateToken(user);
-
-                        return new ResponseDTO
-                        {
-                            IsSuccessfull = true,
-                            Data = token
-                        };
-                    }
+                        IsSuccessfull = true,
+                        Data = true
+                    };
                 }
 
                 return new ResponseDTO
@@ -179,9 +166,10 @@ namespace VillaApi.Controllers
                         ErrorMessage = "Nuk jeni ne nderrim prandaj nuk keni qasje"
                     };
 
-                var tokenItem = new TokenService();
+                var token = tokenService.CreateToken(item);
 
-                var token = tokenItem.CreateToken(item);
+                if(item.IsAdmin == false)
+                    await _userRepository.SaveTokenUser(item.Id, token, DateTime.Now.AddMinutes(TokenKeys.ExpirationMinutes));
 
                 return new ResponseDTO
                 {
@@ -248,11 +236,7 @@ namespace VillaApi.Controllers
         {
             var item = await _userRepository.ResetLogout();
 
-            // Notify ALL connected clients (admin + workers) to force logout
-            await _hubContext.Clients.All.SendCoreAsync("ForceLogout", Array.Empty<object?>());
-
-            // Bump global logout version so polling clients (e.g., Safari) can detect it
-            GlobalFlags.LastGlobalLogoutVersion = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            await _userRepository.BlockTokens();
 
             return new ResponseDTO
             {
@@ -260,18 +244,7 @@ namespace VillaApi.Controllers
                 Data = item
             };
         }
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("Users/LogoutVersion")]
-        public ResponseDTO? GetLogoutVersion()
-        {
-            return new ResponseDTO
-            {
-                IsSuccessfull = true,
-                Data = GlobalFlags.LastGlobalLogoutVersion
-            };
-        }
-
+       
 
         [HttpPut]
         [Route("Users/UpdateStatus")]
@@ -439,28 +412,7 @@ namespace VillaApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("Users/ShouldLogout")]
-        [Authorize]
-        public async Task<ResponseDTO?> ShouldLogout()
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-                {
-                    // Don't force logout if we can't determine user from token
-                    return new ResponseDTO { IsSuccessfull = true, Data = false };
-                }
-                var isLoggedIn = await _userRepository.GetIsLoggedIn(userId);
-                return new ResponseDTO { IsSuccessfull = true, Data = !isLoggedIn };
-            }
-            catch
-            {
-                // On error, do not force logout to avoid accidental kicks after login
-                return new ResponseDTO { IsSuccessfull = true, Data = false };
-            }
-        }
+       
 
 
     }

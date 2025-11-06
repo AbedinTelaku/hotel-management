@@ -254,5 +254,59 @@ namespace VillaApi.Repository
         }
 
 
+        public async Task SaveTokenUser(int userId, string token, DateTime expire)
+        {
+            await _context.LoginTokens.AddAsync(new LoginToken
+            {
+                UserId = userId,
+                Token = token,
+                MomentOfLogin = DateTime.Now,
+                ExpireAt = expire
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task BlockTokens()
+        {
+            DateTime tillMoment = DateTime.Now.AddMinutes(-TokenKeys.ExpirationMinutes);
+
+            var items = await _context.LoginTokens.Where(x => x.MomentOfLogin >= tillMoment).ToListAsync();
+
+            if(items?.Any() == true)
+            {
+                foreach (var item in items)
+                {
+                    await _context.BlockTokens.AddAsync(new BlockToken
+                    {
+                        UserId = item.UserId,
+                        Token = item.Token,
+                        MomentOfBlock = DateTime.Now,
+                        ToDeleteRecordAt = item.ExpireAt
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public void DeleteExpireTokens()
+        {
+            var moment = DateTime.Now;
+            var items = _context.BlockTokens.Where(x => x.ToDeleteRecordAt <= moment).ToList();
+
+            if (items?.Any() == true)
+            {
+                _context.RemoveRange(items);
+                _context.SaveChanges();
+            }
+
+        }
+
+        public bool IsTokenBlocked(string token)
+        {
+            return _context.BlockTokens.Any(x => x.Token == token);
+        }
+
     }
 }

@@ -36,6 +36,32 @@
     ]
   },
   {
+    "ContainingType": "VillaApi.Controllers.InitialzeDBController",
+    "Method": "Start",
+    "RelativePath": "api/InitialzeDB/Start",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "VillaApi.ResponseDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "VillaApi.Controllers.UsersController",
     "Method": "Login",
     "RelativePath": "api/Login",
@@ -2227,26 +2253,6 @@
   },
   {
     "ContainingType": "VillaApi.Controllers.UsersController",
-    "Method": "GetLogoutVersion",
-    "RelativePath": "api/Users/LogoutVersion",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "VillaApi.ResponseDTO",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "VillaApi.Controllers.UsersController",
     "Method": "Remove",
     "RelativePath": "api/Users/Remove",
     "HttpMethod": "DELETE",
@@ -2305,26 +2311,6 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "VillaApi.ResponseDTO",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "VillaApi.Controllers.UsersController",
-    "Method": "ShouldLogout",
-    "RelativePath": "api/Users/ShouldLogout",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "VillaApi.ResponseDTO",

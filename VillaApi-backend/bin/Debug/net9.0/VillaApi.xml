@@ -13,97 +13,17 @@
             <param name="supplyAndSellItems">Items that are going to be added to bill</param>
             <returns>True if the items has been saved in the bill, othervise false</returns>
         </member>
-        <member name="T:VillaApi.Migrations.AddProductStockColumn">
+        <member name="T:VillaApi.Migrations.InitFinal">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.AddProductStockColumn.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:VillaApi.Migrations.InitFinal.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.AddProductStockColumn.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:VillaApi.Migrations.InitFinal.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.AddProductStockColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:VillaApi.Migrations.InitFinal.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
-        </member>
-        <member name="T:VillaApi.Migrations.FixUserIdColumn">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.FixUserIdColumn.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.FixUserIdColumn.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.FixUserIdColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:VillaApi.Migrations.AddIsAdminToUsers">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsAdminToUsers.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsAdminToUsers.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsAdminToUsers.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:VillaApi.Migrations.AddIsForStaffColumn">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsForStaffColumn.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsForStaffColumn.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsForStaffColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:VillaApi.Migrations.AddIsLoggedInToUsers">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsLoggedInToUsers.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsLoggedInToUsers.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Migrations.AddIsLoggedInToUsers.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VillaApi.Utils.MessageDeleter.DeleteAllMessages">
-            <summary>
-            Deletes all messages from the database
-            </summary>
-            <returns>Number of messages deleted</returns>
-        </member>
-        <member name="M:VillaApi.Utils.MessageDeleter.DeleteMessageByCode(System.String)">
-            <summary>
-            Deletes a specific message by code
-            </summary>
-            <param name="code">Message code to delete</param>
-            <returns>True if deleted, false if not found</returns>
-        </member>
-        <member name="M:VillaApi.Utils.MessageDeleter.DeleteMessagesContaining(System.String)">
-            <summary>
-            Deletes messages that contain specific text
-            </summary>
-            <param name="searchText">Text to search for in messages</param>
-            <returns>Number of messages deleted</returns>
-        </member>
-        <member name="M:VillaApi.Utils.MessageDeleter.GetAllMessages">
-            <summary>
-            Gets all messages for review before deletion
-            </summary>
-            <returns>List of all messages</returns>
-        </member>
-        <member name="M:VillaApi.Utils.MessageDeleter.GetMessageCount">
-            <summary>
-            Gets count of total messages
-            </summary>
-            <returns>Total number of messages</returns>
         </member>
     </members>
 </doc>

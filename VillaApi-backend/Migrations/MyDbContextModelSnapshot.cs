@@ -22,6 +22,32 @@ namespace VillaApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("VillaApi.Models.BlockToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("MomentOfBlock")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ToDeleteRecordAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlockToken", "dbo");
+                });
+
             modelBuilder.Entity("VillaApi.Models.Capability", b =>
                 {
                     b.Property<string>("Code")
@@ -86,6 +112,32 @@ namespace VillaApi.Migrations
                     b.HasIndex("CapabilityCode");
 
                     b.ToTable("FormCapability", "dbo");
+                });
+
+            modelBuilder.Entity("VillaApi.Models.LoginToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("MomentOfLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoginToken", "dbo");
                 });
 
             modelBuilder.Entity("VillaApi.Models.Messages", b =>
@@ -207,10 +259,6 @@ namespace VillaApi.Migrations
 
                     b.HasKey("Code");
 
-                    b.HasIndex("Category");
-
-                    b.HasIndex("EnteredBy");
-
                     b.ToTable("Product", "dbo");
                 });
 
@@ -322,16 +370,6 @@ namespace VillaApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CashierId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("EnteredBy");
-
-                    b.HasIndex("RoomMovementId");
-
-                    b.HasIndex("RoomTypeCode");
-
                     b.ToTable("RoomDetails", "dbo");
                 });
 
@@ -395,8 +433,6 @@ namespace VillaApi.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnteredBy");
 
                     b.HasIndex("RoomNo");
 
@@ -568,10 +604,6 @@ namespace VillaApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CashierId");
-
-                    b.HasIndex("CreatedBy");
-
                     b.HasIndex("ProductCode");
 
                     b.HasIndex("SupplyAndSellId");
@@ -654,25 +686,6 @@ namespace VillaApi.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("VillaApi.Models.Product", b =>
-                {
-                    b.HasOne("VillaApi.Models.ProductCategory", "ProductCategory")
-                        .WithMany()
-                        .HasForeignKey("Category")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VillaApi.Models.Users", "Users")
-                        .WithMany()
-                        .HasForeignKey("EnteredBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductCategory");
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("VillaApi.Models.ProductCategory", b =>
                 {
                     b.HasOne("VillaApi.Models.Users", "Users")
@@ -695,55 +708,8 @@ namespace VillaApi.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("VillaApi.Models.RoomDetail", b =>
-                {
-                    b.HasOne("VillaApi.Models.Users", "CashierUser")
-                        .WithMany()
-                        .HasForeignKey("CashierId");
-
-                    b.HasOne("VillaApi.Models.Users", "CreatedUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VillaApi.Models.Users", "Users")
-                        .WithMany()
-                        .HasForeignKey("EnteredBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VillaApi.Models.RoomMovement", "RoomMovement")
-                        .WithMany()
-                        .HasForeignKey("RoomMovementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VillaApi.Models.RoomType", "RoomType")
-                        .WithMany()
-                        .HasForeignKey("RoomTypeCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CashierUser");
-
-                    b.Navigation("CreatedUser");
-
-                    b.Navigation("RoomMovement");
-
-                    b.Navigation("RoomType");
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("VillaApi.Models.RoomMovement", b =>
                 {
-                    b.HasOne("VillaApi.Models.Users", "Users")
-                        .WithMany()
-                        .HasForeignKey("EnteredBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("VillaApi.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomNo")
@@ -751,8 +717,6 @@ namespace VillaApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("VillaApi.Models.RoomPrice", b =>
@@ -796,16 +760,6 @@ namespace VillaApi.Migrations
 
             modelBuilder.Entity("VillaApi.Models.SupplyAndSellItem", b =>
                 {
-                    b.HasOne("VillaApi.Models.Users", "CashierUser")
-                        .WithMany()
-                        .HasForeignKey("CashierId");
-
-                    b.HasOne("VillaApi.Models.Users", "CreatedUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("VillaApi.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductCode")
@@ -817,10 +771,6 @@ namespace VillaApi.Migrations
                         .HasForeignKey("SupplyAndSellId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CashierUser");
-
-                    b.Navigation("CreatedUser");
 
                     b.Navigation("Product");
 
