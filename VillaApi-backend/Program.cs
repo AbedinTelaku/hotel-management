@@ -96,12 +96,14 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")  // Your React app's origin
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials(); // Important for SignalR auth
+        });
 });
 
 builder.Services.AddControllers() // Ensure AddControllers is called after AddCors
@@ -179,7 +181,7 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseMiddleware<BlockTokenMiddleware>();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 
