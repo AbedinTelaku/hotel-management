@@ -23,7 +23,7 @@ namespace VillaApi.IRepository
 
         Task SaveTokenUser(int userId, string token, DateTime expire);
         Task BlockTokens();
-        void DeleteExpireTokens();
+        Task DeleteExpireTokens(CancellationToken cancellationToken);
         bool IsTokenBlocked(string token);
 
     }

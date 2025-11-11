@@ -13,16 +13,22 @@
             <param name="supplyAndSellItems">Items that are going to be added to bill</param>
             <returns>True if the items has been saved in the bill, othervise false</returns>
         </member>
-        <member name="T:VillaApi.Migrations.InitFinal">
+        <member name="T:VillaApi.FingerPrint">
+            <summary>
+            Generates a 16 byte Unique Identification code of a computer
+            Example: 4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9
+            </summary>
+        </member>
+        <member name="T:VillaApi.Migrations.Init">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.InitFinal.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:VillaApi.Migrations.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.InitFinal.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:VillaApi.Migrations.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.InitFinal.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:VillaApi.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

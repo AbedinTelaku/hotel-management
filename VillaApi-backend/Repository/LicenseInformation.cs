@@ -6,8 +6,13 @@ namespace VillaApi.Repository
 {
     public class LicenseInformation
     {
-        private const string LicenseKey = "MIIBKjCB4wYHKoZIzj0CATCB1wIBATAsBgcqhkjOPQEBAiEA/////wAAAAEAAAAAAAAAAAAAAAD///////////////8wWwQg/////wAAAAEAAAAAAAAAAAAAAAD///////////////wEIFrGNdiqOpPns+u9VXaYhrxlHQawzFOw9jvOPD4n0mBLAxUAxJ02CIbnBJNqZnjhE50mt4GffpAEIQNrF9Hy4SxCR/i85uVjpEDydwN9gS3rM6D0oTlF2JjClgIhAP////8AAAAA//////////+85vqtpxeehPO5ysL8YyVRAgEBA0IABPd8TFKtx9WyVy7hEvQtfOqzlL5hmtz1T9GjVwf74YPkuG3obDSUFVMEWGFjDTLByhBJtOgCZTsQnTsGARcb93Q=";
-       
+        private readonly string LicenseKey = "";
+
+        public LicenseInformation(string licenseKey)
+        {
+            LicenseKey = licenseKey;
+        }
+
         public bool IsValid { get; private set; } = true;
 
         public DateTime ExpireAt { get; private set; } = DateTime.Today.AddDays(5);
@@ -23,8 +28,9 @@ namespace VillaApi.Repository
         {
             try
             {
-                using (XmlReader reader = XmlReader.Create(@"license.xml"))
-                {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "license.xml");
+                using (XmlReader reader = XmlReader.Create(path))
+                { 
                     var license = License.Load(reader);
 
                     license.Validate()
@@ -46,7 +52,6 @@ namespace VillaApi.Repository
             }
             catch
             {
-                // Invalid license or error reading file
             }
 
             ShowMessageAlert = true;

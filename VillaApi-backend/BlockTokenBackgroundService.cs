@@ -16,7 +16,7 @@ namespace VillaApi
                 using var scope = serviceProvider.CreateScope();
                 var repo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 
-                repo.DeleteExpireTokens();
+                await repo.DeleteExpireTokens(stoppingToken);
 
                 await Task.Delay(TimeSpan.FromHours(1));
             }

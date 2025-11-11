@@ -41,8 +41,6 @@ namespace VillaApi
                     await _hubContext.Clients.Client(accessToken.Replace("Bearer ", ""))
                                 .SendAsync("ForceLogout", "You have been disconnected by admin.");
 
-                    Console.WriteLine(_hubContext.Clients.All.ToJson());
-
                     await context.Response.WriteAsJsonAsync<ResponseDTO>(new ResponseDTO
                     {
                         IsSuccessfull = false,

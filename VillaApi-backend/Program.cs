@@ -1,21 +1,13 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using VillaApi;
 using VillaApi.Hubs;
-using VillaApi.IRepository;
 using VillaApi.Repository;
 using VillaApi.Utils;
 
@@ -25,12 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
+var test = AesEncryption.Decrypt(builder.Configuration["MyDatabase"]?.ToString() ?? "");
 
-builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
+builder.Services.AddDbContext<DbContext, MyDbContext>(options =>
+    options.UseSqlServer(AesEncryption.Decrypt(builder.Configuration["MyDatabase"]?.ToString() ?? "")));
 
 // Register repositories
-builder.Services.AddSingleton<LicenseInformation>();
+builder.Services.AddSingleton(provider => new LicenseInformation(builder.Configuration["LicenseKey"]?.ToString() ?? ""));
 builder.Services.AddHostedService<BackgroundServiceForLicense>();
 
 builder.Services.AddSingleton<TokenService>();
@@ -100,18 +93,15 @@ builder.Services.AddAuthentication()
         });
 
 
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy
-            // Allow any origin during development (including LAN IPs like 192.168.x.x)
-            .SetIsOriginAllowed(_ => true)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-        });
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
 builder.Services.AddControllers() // Ensure AddControllers is called after AddCors
@@ -174,11 +164,14 @@ builder.Services.AddScoped<SeedData>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseSerilogRequestLogging();
 
@@ -186,7 +179,7 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseMiddleware<BlockTokenMiddleware>();
 
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

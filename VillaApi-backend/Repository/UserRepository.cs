@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using VillaApi.Dtos;
 using VillaApi.IRepository;
 using VillaApi.Models;
@@ -290,15 +291,15 @@ namespace VillaApi.Repository
             await _context.SaveChangesAsync();
         }
 
-        public void DeleteExpireTokens()
+        public async Task DeleteExpireTokens(CancellationToken cancellationToken)
         {
             var moment = DateTime.Now;
-            var items = _context.BlockTokens.Where(x => x.ToDeleteRecordAt <= moment).ToList();
+            var items = _context.BlockTokens.Where(x => x.ToDeleteRecordAt <= moment);
 
-            if (items?.Any() == true)
+            if (await items.AnyAsync(cancellationToken))
             {
-                _context.RemoveRange(items);
-                _context.SaveChanges();
+                _context.RemoveRange(await items.ToListAsync(cancellationToken));
+               await _context.SaveChangesAsync(cancellationToken);
             }
 
         }

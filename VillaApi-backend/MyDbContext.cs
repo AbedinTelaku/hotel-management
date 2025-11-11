@@ -39,18 +39,5 @@ namespace VillaApi
         public DbSet<Payment> Payments { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            var mybuilder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: false);
-
-            IConfiguration myConfiguration = mybuilder.Build();
-
-            optionsBuilder.UseSqlServer(myConfiguration.GetValue<string>("ConnectionStrings:MyDatabase"));
-        }
-
     }
 }

@@ -37,6 +37,32 @@
   },
   {
     "ContainingType": "VillaApi.Controllers.InitialzeDBController",
+    "Method": "GetHardwareInformation",
+    "RelativePath": "api/InitialzeDB/GetHardwareInformation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "VillaApi.ResponseDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "VillaApi.Controllers.InitialzeDBController",
     "Method": "Start",
     "RelativePath": "api/InitialzeDB/Start",
     "HttpMethod": "POST",
