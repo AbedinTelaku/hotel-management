@@ -238,44 +238,55 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose, isEditMode
 
   // Auto-set price based on booking type and room model
   useEffect(() => {
-    if (!isEditMode && room.roomModel && roomPrices.length > 0) {
-      const getRoomTypeCode = (bookingType: string): string => {
-        switch (bookingType) {
-          case 'pushim': return 'P';
-          case '24h': return '24h';
-          case 'fjetje': return 'F';
-          case 'tjeter': return 'T';
-          default: return 'P';
-        }
-      };
+    if (isEditMode) {
+      return;
+    }
 
+    const setFallbackPrice = (type: typeof bookingType) => {
+      switch (type) {
+        case 'pushim':
+          setPrice('15');
+          break;
+        case '24h':
+          setPrice('50');
+          break;
+        case 'fjetje':
+          setPrice('35');
+          break;
+        case 'tjeter':
+          setPrice('');
+          setHours('');
+          break;
+        default:
+          setPrice('');
+      }
+    };
+
+    const getRoomTypeCode = (type: typeof bookingType): string => {
+      switch (type) {
+        case 'pushim': return 'P';
+        case '24h': return '24h';
+        case 'fjetje': return 'F';
+        case 'tjeter': return 'T';
+        default: return 'P';
+      }
+    };
+
+    if (room.roomModel && roomPrices.length > 0) {
       const roomTypeCode = getRoomTypeCode(bookingType);
-      const roomPrice = roomPrices.find(p => 
+      const roomPrice = roomPrices.find(p =>
         p.roomType === roomTypeCode && p.roomModel === room.roomModel
       );
 
       if (roomPrice) {
         setPrice(roomPrice.price.toString());
         console.log(`💰 Auto-set price: ${roomPrice.price} for ${bookingType} (${roomTypeCode}) in ${room.roomModel}`);
-      } else {
-        // Fallback to default prices if not found in database
-        switch (bookingType) {
-          case 'pushim':
-            setPrice('15');
-            break;
-          case '24h':
-            setPrice('50');
-            break;
-          case 'fjetje':
-            setPrice('35');
-            break;
-          case 'tjeter':
-            setPrice('');
-            setHours(''); // Allow user to enter custom hours
-            break;
-        }
+        return;
       }
     }
+
+    // Fallback if price list not loaded yet or specific combination missing
+    setFallbackPrice(bookingType);
   }, [bookingType, room.roomModel, roomPrices, isEditMode]);
 
   // Load saved drinks info when modal opens (only for edit mode)
