@@ -302,13 +302,13 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
 }, []);
 
 
-  const loadRooms = async () => {
+  const loadRooms = async (forceRemote: boolean = false) => {
     try {
       console.log('🔄 Loading rooms from API...');
       setLoading(true);
       setError('');
-      
-      const response = await roomService.getRooms();
+
+      const response = await roomService.getRooms(forceRemote);
       
       if (response.isSuccessfull && response.data) {
         // Convert API data to local format
@@ -534,7 +534,7 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
         } else {
           // For new bookings, use openRoom
           const response = await roomService.openRoom({
-            roomNo: selectedRoom.name,
+            roomNo: selectedRoom.id.toString(),
             bookingType: bookingData.bookingType,
             tables: bookingData.tables,
             vehicle: bookingData.vehicle,
@@ -556,24 +556,7 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
             localStorage.removeItem(`drinks_${selectedRoom.id}`);
             console.log('🍹 Cleared drinks data for room', selectedRoom.id, 'when opening new booking');
 
-            setRooms(prevRooms =>
-              prevRooms.map(room =>
-                room.id === selectedRoom.id
-                  ? {
-                      ...room,
-                      ...bookingData,
-                      // Ensure numeric hours in state
-                      hours: bookingData.hours ? Number(bookingData.hours) : room.hours,
-                      status: 'occupied' as const,
-                      roomMovementId: response.data,
-                      startTime: bookingData.startTime || new Date().toISOString(),
-                      entryOn: new Date().toISOString(), // Ruajmë kohën e hapjes
-                      tables: bookingData.tables || '', // Ruajmë numrin e tabelave
-                      vehicle: bookingData.vehicle || '' // Ruajmë informacionin e veturës
-                    }
-                  : room
-              )
-            );
+            await loadRooms(true);
           } else {
             setError(response.errorMessage || 'Gabim në hapjen e dhomës');
           }

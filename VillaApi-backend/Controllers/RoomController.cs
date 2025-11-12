@@ -120,27 +120,19 @@ namespace VillaApi.Controllers
         [HttpGet]
         public async Task<ResponseDTO?> GetRooms()
         {
-            if (!_license.IsValid)
-            {
-                return new ResponseDTO
-                {
-                    IsSuccessfull = false,
-                    ErrorMessage = _license.GetMessgeToDisplay()
-                    ,Data = new List<RoomViewDTO>()
-                };
-            }
+            var licenseValid = _license.IsValid;
 
-
-            if (_license.ShowMessageAlert && !_license.AlertOpen)
+            if (!licenseValid && _license.ShowMessageAlert && !_license.AlertOpen)
             {
                 await _hubContext.Clients.All.SendCoreAsync("LicenseExpire", new object[] { _license.GetMessgeToDisplay() });
-            }      
+            }
 
             var response = await _repo.GetRooms();
 
             return new ResponseDTO
             {
                 IsSuccessfull = true,
+                ErrorMessage = licenseValid ? null : _license.GetMessgeToDisplay(),
                 Data = response
             };
         }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
@@ -10,6 +11,8 @@ using VillaApi;
 using VillaApi.Hubs;
 using VillaApi.Repository;
 using VillaApi.Utils;
+
+var seedOnly = args.Contains("--seed-only", StringComparer.OrdinalIgnoreCase);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -164,6 +167,20 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<SeedData>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+    context.Database.EnsureCreated();
+
+    var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
+    await seeder.AdminUser();
+}
+
+if (seedOnly)
+{
+    return;
+}
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

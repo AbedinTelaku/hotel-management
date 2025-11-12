@@ -10,3 +10,5 @@
 /VillaApi-backend/.vs/VillaApi/DesignTimeBuild/.dtbcache.v2
 /VillaApi-backend/Migrations
 /VillaApi-backend/Properties/PublishProfiles
+/VillaApi-backend/appsettings.json
+/VillaApi-backend/appsettings.Development.json

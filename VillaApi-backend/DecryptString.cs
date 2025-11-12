@@ -57,7 +57,16 @@ public static class AesEncryption
         if (string.IsNullOrWhiteSpace(encryptedText))
             return string.Empty;
 
-        byte[] fullCipher = Convert.FromBase64String(encryptedText);
+        byte[] fullCipher;
+        try
+        {
+            fullCipher = Convert.FromBase64String(encryptedText);
+        }
+        catch (FormatException)
+        {
+            // Value is not encrypted; return as-is.
+            return encryptedText;
+        }
 
         // Extract salt and IV (first 16 + 16 bytes)
         byte[] salt = new byte[16];

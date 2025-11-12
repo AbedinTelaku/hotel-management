@@ -19,16 +19,16 @@
             Example: 4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9
             </summary>
         </member>
-        <member name="T:VillaApi.Migrations.Init">
+        <member name="T:VillaApi.Migrations.InitFull">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:VillaApi.Migrations.InitFull.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:VillaApi.Migrations.InitFull.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:VillaApi.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:VillaApi.Migrations.InitFull.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

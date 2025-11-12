@@ -205,15 +205,30 @@ class RoomService {
 
       // Convert room number to database format (with leading zero if needed)
       const formatRoomNo = (roomNo: string): string => {
-        // Handle VIP rooms - remove spaces and ensure proper format
-        if (roomNo.toLowerCase().includes('vip')) {
-          return roomNo.replace(/\s+/g, ''); // Remove all spaces
+        if (!roomNo) {
+          return roomNo;
         }
-        
-        // Handle numeric rooms - add leading zero if needed
-        const num = parseInt(roomNo);
-        if (isNaN(num)) return roomNo; // Return as-is if not a number
-        return num.toString().padStart(2, '0'); // Add leading zero for single digits
+
+        const trimmed = roomNo.trim();
+
+        // Handle VIP rooms - remove spaces and ensure proper format
+        if (trimmed.toLowerCase().includes('vip')) {
+          return trimmed.replace(/\s+/g, '');
+        }
+
+        // If the value is purely numeric (including with leading zeros) normalise it
+        if (/^\d+$/.test(trimmed)) {
+          return parseInt(trimmed, 10).toString();
+        }
+
+        // If the value contains a numeric part (e.g. "Dhoma 1"), extract it
+        const numericPart = trimmed.match(/\d+/);
+        if (numericPart) {
+          return parseInt(numericPart[0], 10).toString();
+        }
+
+        // Fallback to trimmed text as-is
+        return trimmed;
       };
 
       const backendData: OpenRoomParameters = {
