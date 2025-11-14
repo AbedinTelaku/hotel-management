@@ -13,8 +13,6 @@ using VillaApi.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 var test = AesEncryption.Decrypt(builder.Configuration["MyDatabase"]?.ToString() ?? "");
@@ -93,16 +91,14 @@ builder.Services.AddAuthentication()
         });
 
 
+var reactPort = builder.Configuration["MyReactApp"]?.ToString() ?? "";
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins(
-                    "http://192.168.1.5:8081",
-                    "http://localhost:8081"
-                    )
+            policy.WithOrigins(reactPort.Split(','))
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
