@@ -88,14 +88,9 @@ function App() {
   // Global SignalR listener for ForceLogout so it works on every page/device
   useEffect(() => {
     if (!user?.role) return; // wait until role is known
-    const hubBaseCfg = (API_BASE_URL || '').replace(/\/$/, '');
-    // Build hub url: use LAN IP + correct port (5210 for http, 7210 for https)
-    // Always use HTTPS hub on backend (7210) to avoid mixed-protocol issues
-    const hubUrl = hubBaseCfg.startsWith('/')
-      ? `https://${window.location.hostname}:7210/roomshub`
-      : `${hubBaseCfg.replace(/\/api$/, '')}/roomshub`;
+    
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl)
+      .withUrl(authService.GetHubUrl(), {withCredentials: true})
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();

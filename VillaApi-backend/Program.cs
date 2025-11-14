@@ -99,10 +99,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173")  // Your React app's origin
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials(); // Important for SignalR auth
+            policy.WithOrigins(
+                    "http://192.168.1.5:8081",
+                    "http://localhost:8081"
+                    )
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
 
@@ -179,11 +182,11 @@ app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-app.UseMiddleware<BlockTokenMiddleware>();
-
 app.UseCors("AllowFrontend");
 
-app.UseHttpsRedirection();
+app.UseMiddleware<BlockTokenMiddleware>();
+
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

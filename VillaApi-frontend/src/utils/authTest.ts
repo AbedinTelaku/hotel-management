@@ -1,3 +1,5 @@
+import { authService } from "../services";
+
 // Test authentication endpoints
 export const testLogin = async (username: string, password: string) => {
   try {
@@ -5,7 +7,7 @@ export const testLogin = async (username: string, password: string) => {
     formData.append('username', username);
     formData.append('password', password);
     
-    const response = await fetch('https://localhost:7210/api/Login', {
+    const response = await fetch(`${authService.GetBaseUrl()}/Login`, {
       method: 'POST',
       body: formData
     });
@@ -40,7 +42,7 @@ export const testRegister = async (username: string, password: string) => {
     formData.append('username', username);
     formData.append('password', password);
     
-    const response = await fetch('https://localhost:7210/api/Register', {
+    const response = await fetch(`${authService.GetBaseUrl()}/Register`, {
       method: 'POST',
       body: formData
     });

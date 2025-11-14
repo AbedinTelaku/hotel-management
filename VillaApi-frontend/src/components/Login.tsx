@@ -51,7 +51,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           
           // Fallback: Try to get user role from backend API
           try {
-            const userResponse = await fetch('https://localhost:7210/api/Users/CheckAdmin', {
+            const userResponse = await fetch(`${authService.GetBaseUrl()}/Users/CheckAdmin`, {
               headers: {
                 'Authorization': `Bearer ${response.data}`,
                 'Content-Type': 'application/json'

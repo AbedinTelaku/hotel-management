@@ -13,6 +13,7 @@ interface AddExtraModalProps {
   };
   onClose: () => void;
   onSuccess: () => void;
+  
 }
 
 const AddExtraModal: React.FC<AddExtraModalProps> = ({ room, onClose, onSuccess }) => {
@@ -28,6 +29,8 @@ const AddExtraModal: React.FC<AddExtraModalProps> = ({ room, onClose, onSuccess 
 
   // Fetch extra options from API
   useEffect(() => {
+
+
     const fetchExtras = async () => {
       if (!room.roomModel) {
         setError('Room model nuk është i disponueshëm');
@@ -104,6 +107,7 @@ const AddExtraModal: React.FC<AddExtraModalProps> = ({ room, onClose, onSuccess 
 
       if (response.isSuccessfull) {
         console.log('✅ Extra added successfully to room:', room.name);
+        
         onSuccess();
         // Don't call onClose() here - let the parent handle it
       } else {

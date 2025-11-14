@@ -8,7 +8,6 @@ import useRealTimeTimer from '../hooks/useRealTimeTimer';
 import './RoomGrid.css';
 import './RoomGrid.reserving.css';
 import * as signalR from "@microsoft/signalr";
-import { API_BASE_URL } from '../config/api';
 import authService from '../services/authService';
 
 interface Room {
@@ -245,13 +244,9 @@ const RoomGrid: React.FC<RoomGridProps> = ({ userRole }) => {
 
   useEffect(() => {
   // Create SignalR connection
-  const baseCfg = (API_BASE_URL || '').replace(/\/$/, '');
   // Always use HTTPS hub on backend (7210)
-  const hubUrl = baseCfg.startsWith('/')
-    ? `https://${window.location.hostname}:7210/roomshub`
-    : `${baseCfg.replace(/\/api$/, '')}/roomshub`;
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl(hubUrl)
+    .withUrl(authService.GetHubUrl(), {withCredentials: true})
     .withAutomaticReconnect()
     .configureLogging(signalR.LogLevel.Information)
     .build();

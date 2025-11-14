@@ -1,4 +1,5 @@
 import apiService, { ApiResponse } from './api';
+import { API_BASE_URL, API_HUB_URL } from '../config/api';
 
 export interface LoginRequest {
   username: string;
@@ -29,6 +30,7 @@ export interface AuthToken {
 }
 
 class AuthService {
+ 
   async login(credentials: LoginRequest): Promise<ApiResponse<string>> {
     try {
       console.log('🔐 Attempting login with credentials:', { username: credentials.username });
@@ -83,6 +85,14 @@ class AuthService {
       console.error('Get users failed:', error);
       throw error;
     }
+  }
+
+  GetBaseUrl(): string {
+    return API_BASE_URL;
+  }
+
+  GetHubUrl(): string {
+    return API_HUB_URL;
   }
 
   async changePassword(passwordData: ChangePasswordRequest): Promise<ApiResponse<boolean>> {

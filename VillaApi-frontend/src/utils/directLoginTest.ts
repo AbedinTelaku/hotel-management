@@ -1,3 +1,5 @@
+import { authService } from "../services";
+
 // Direct login test to debug the issue
 export const testDirectLogin = async () => {
   try {
@@ -12,7 +14,7 @@ export const testDirectLogin = async () => {
       console.log(`  ${key}: ${value}`);
     }
     
-    const response = await fetch('https://localhost:7210/api/Login', {
+    const response = await fetch(`${authService.GetBaseUrl()}/Login`, {
       method: 'POST',
       body: formData
     });
